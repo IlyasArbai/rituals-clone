@@ -1,0 +1,102 @@
+generator client {
+    provider = "prisma-client"
+    output   = "./generated"
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+enum UserRole {
+    USER
+    ADMIN
+}
+
+model User {
+    id            Int      @id @default(autoincrement())
+    name          String
+    email         String   @unique
+    emailVerified Boolean  @default(false)
+    password      String
+    role          UserRole @default(USER)
+
+    orders   Order[]
+    sessions Session[]
+}
+
+model Session {
+    tokenHash String   @id @default(uuid())
+    userId    Int
+    expiresAt DateTime
+    createdAt DateTime @default(now())
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
+}
+
+enum ProductCategory {
+    BODY_CARE
+    FACE_BEAUTY
+    HAIR_STRENGTH
+    HOME
+}
+
+model Product {
+    id          Int             @id @default(autoincrement())
+    name        String
+    category    ProductCategory
+    description String          @db.Text
+
+    price    Int
+    oldPrice Int?
+
+    image    String
+    size     String
+    skinType String?
+
+    ingredients String[]
+    benefits    String[]
+    scent       Json?
+    howToUse    String   @db.Text
+    details     String[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    orderItems OrderItem[]
+}
+
+enum OrderStatus {
+    Preparing
+    Delivering
+    Delivered
+    Cancelled
+}
+
+model Order {
+    id Int @id @default(autoincrement())
+
+    userId Int
+    user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    status OrderStatus @default(Preparing)
+
+    items     OrderItem[]
+    createdAt DateTime    @default(now())
+}
+
+model OrderItem {
+    id        Int @id @default(autoincrement())
+    orderId   Int
+    productId Int
+
+    quantity Int @default(1)
+    price    Int
+
+    order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+    product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+    @@unique([orderId, productId])
+    @@index([productId])
+}

@@ -1,0 +1,26 @@
+@import url("https://fonts.googleapis.com/css2?family=Artifika&display=swap");
+
+@import "tailwindcss";
+@import "primeicons/primeicons.css";
+
+@theme {
+  --font-custom: "Artifika";
+  --color-primary: #828860;
+}
+
+@layer base {
+  * {
+    @apply font-custom;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+}
+
+section,
+footer {
+  scroll-snap-align: start;
+  scroll-margin-top: 10dvh;
+}

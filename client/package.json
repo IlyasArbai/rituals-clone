@@ -1,0 +1,28 @@
+{
+  "name": "rituals-clone",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "imports": {
+    "#root/*": "./*",
+    "#src/*": "./src/*"
+  },
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "axios": "^1.20.0",
+    "pinia": "^4.1.0",
+    "primeicons": "^8.0.2",
+    "tailwindcss": "^4.3.3",
+    "vue": "^3.5.21",
+    "vue-router": "^5.4.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.1",
+    "vite": "^7.1.6"
+  }
+}
