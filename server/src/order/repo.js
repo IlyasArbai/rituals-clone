@@ -8,6 +8,7 @@ export class OrderRepo {
         id: true,
         status: true,
         createdAt: true,
+        user: true,
         items: {
           select: {
             product: {
@@ -46,6 +47,13 @@ export class OrderRepo {
   static async delete(where) {
     return prisma.order.deleteMany({
       where,
+    });
+  }
+
+  static async update(where, data) {
+    return prisma.order.update({
+      where,
+      data,
     });
   }
 }

@@ -1,55 +1,40 @@
 import express from "express";
-import cors from "cors";
 import cookieParser from "cookie-parser";
 
 import AuthRoutes from "./auth/routes.js";
 import ProductRoutes from "./product/routes.js";
 import UserRoutes from "./user/routes.js";
-import { sendEmail } from "./utils/email.js";
+import AdminRoutes from "./admin/routes.js";
+import OrderRoutes from "./order/routes.js";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  }),
-);
 app.use(cookieParser());
 
-app.use("/auth", AuthRoutes);
-app.use("/products", ProductRoutes);
-app.use("/users", UserRoutes);
-
-app.post("/send-email", async (req, res) => {
-  try {
-    const { to, subject, message } = req.body;
-
-    if (!to || !subject || !message) {
-      return res.status(400).json({
-        error: "to, subject, and message are required",
-      });
-    }
-
-    await sendEmail({
-      to,
-      subject,
-      text: message,
-    });
-
-    return res.status(200).json({
-      message: "Email sent successfully",
-    });
-  } catch (error) {
-    console.error("Failed to send email:", error.message);
-
-    return res.status(500).json({
-      error: "Failed to send email",
-    });
-  }
+app.get("/health", (req, res) => {
+  return res.json({ success: true, message: "api is running" });
+});
+app.post("/health", (req, res) => {
+  return res.json({ success: true, message: "api is running" });
 });
 
-app.listen("3000", () => {
-  console.log(`Server is running on port 3000`);
+app.use("/api/auth", AuthRoutes);
+app.use("/api/products", ProductRoutes);
+app.use("/api/users", UserRoutes);
+app.use("/api/admin", AdminRoutes);
+app.use("/api/orders", OrderRoutes);
+
+const PORT = process.env.PORT || 3000;
+
+app.use((req, res) => {
+  res.json({
+    success: false,
+    message: "Route not found",
+    path: req.originalUrl,
+  });
+});
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
 });

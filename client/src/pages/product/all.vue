@@ -55,7 +55,7 @@ const filteredProducts = computed(() =>
         </p>
 
         <RouterLink
-          v-if="auth.user.role == 'ADMIN'"
+          v-if="auth?.user?.role == 'ADMIN'"
           to="/products/create"
           aria-label="Create product"
           title="Create product"

@@ -13,6 +13,10 @@ export class UserRepo {
     return prisma.user.create({ data });
   }
 
+  static async count() {
+    return prisma.user.count();
+  }
+
   static async update(where, data) {
     return prisma.user.update({
       where,

@@ -1,4 +1,5 @@
 import { AuthRepo } from "../auth/repo.js";
+import { OrderRepo } from "../order/repo.js";
 
 export async function authenticate(req, res, next) {
   try {
@@ -45,13 +46,9 @@ export function requireAdmin(req, res, next) {
       message: "Forbidden",
     });
 
-  console.log("admin");
-
   next();
 }
 export const validate = (schema) => (req, res, next) => {
-  console.log("valdation");
-
   const result = schema.safeParse({
     body: req.body,
     params: req.params,
@@ -71,3 +68,18 @@ export const validate = (schema) => (req, res, next) => {
   req.validated = result.data;
   next();
 };
+export async function orderOwner(req, res, next) {
+  if (req.user.role === "ADMIN") next();
+
+  const order = await OrderRepo.find(
+    { id: Number(req.params.id) },
+    { userId: true },
+  );
+  if (req.user.id !== order.userId)
+    return res.json({
+      success: false,
+      message: "Forbidden",
+    });
+
+  next();
+}

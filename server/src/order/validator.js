@@ -28,3 +28,11 @@ export const orderIdSchema = z.object({
     id: z.coerce.number().int().positive(),
   }),
 });
+
+export const orderStatusSchema = z.object({
+  body: z
+    .object({
+      status: z.enum(["Preparing", "Delivering", "Delivered", "Cancelled"]),
+    })
+    .strict(),
+});
